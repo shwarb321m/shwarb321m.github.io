@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06100e">
+<title>SAFI — لوحة صاحب المحل</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#e8c46c;--em:#24c99c;--red:#ff5f6d;--tx:#f2f6f4;--mu:#8a9d97;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.045)}
+body{min-height:100vh;font-family:'Tajawal',sans-serif;color:var(--tx);background:radial-gradient(80% 60% at 100% 0%,#0f2b24,transparent 60%),radial-gradient(70% 50% at 0% 100%,#221a08,transparent 60%),#050b0a}
+button,input,textarea{font-family:inherit;color:inherit}
+.num{font-family:'Outfit',sans-serif;font-variant-numeric:tabular-nums}
+.gold{background:linear-gradient(100deg,#fff4cf,#e8c46c 45%,#b4842f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{max-width:860px;margin:0 auto;padding:28px 18px 60px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.logo{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#2b2410,#0d0f0b);border:1px solid rgba(232,196,108,.45);font:800 24px Outfit}
+header h1{font-size:22px;font-weight:900}
+header p{color:var(--mu);font-size:13px}
+.mode{margin-inline-start:auto;font-size:12px;padding:7px 12px;border-radius:30px;border:1px solid rgba(232,196,108,.35);color:var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:16px}
+.card h2{font-size:16px;font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.card h2 small{font-size:12px;color:var(--mu);font-weight:400}
+table{width:100%;border-collapse:separate;border-spacing:0 8px}
+th{font-size:12px;color:var(--mu);font-weight:500;text-align:right;padding:0 8px}
+td{padding:8px;background:rgba(0,0,0,.25);vertical-align:middle}
+td:first-child{border-radius:0 14px 14px 0}
+td:last-child{border-radius:14px 0 0 14px}
+.cur{display:flex;align-items:center;gap:10px;font-weight:800}
+.sym{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font:800 14px Outfit;color:#fff}
+.cur small{display:block;color:var(--mu);font-weight:400;font-size:11px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:34px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:18px;cursor:pointer}
+.stepper input{width:110px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.35);text-align:center;font:700 16px Outfit;outline:none}
+.stepper input:focus{border-color:rgba(232,196,108,.6)}
+.stepper input.changed{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,196,108,.15)}
+.spread{font-size:12px;color:var(--mu)}
+.btn{height:52px;padding:0 26px;border-radius:16px;border:0;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(145deg,#f0d080,#b4842f);color:#1a1205;box-shadow:0 12px 30px rgba(232,196,108,.2)}
+.btn.ghost{background:var(--card);color:var(--tx);border:1px solid var(--line);box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+textarea{width:100%;min-height:80px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.3);padding:12px;font-size:15px;outline:none;resize:vertical}
+.login{max-width:360px;margin:12vh auto;text-align:center}
+.login input{width:100%;height:60px;border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.35);text-align:center;font:700 26px Outfit;letter-spacing:10px;outline:none;margin:20px 0 14px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140%);padding:14px 22px;border-radius:16px;background:#13241f;border:1px solid rgba(232,196,108,.45);transition:transform .45s cubic-bezier(.2,.8,.2,1);font-weight:700}
+.toast.show{transform:translate(-50%,0)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.kpis div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.kpis small{color:var(--mu);font-size:12px}
+.kpis b{display:block;font-size:24px;margin-top:4px}
+@media(max-width:620px){.spread{display:none}.stepper input{width:84px}.stepper button{width:28px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="loginView">
+  <div class="login">
+    <div class="logo" style="margin:0 auto"><span class="gold">S</span></div>
+    <h1 style="margin-top:18px;font-size:22px">لوحة صاحب المحل</h1>
+    <p style="color:var(--mu);font-size:13px;margin-top:6px">أدخل الرمز السري للمتابعة</p>
+    <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••">
+    <button class="btn" style="width:100%" id="loginBtn">دخول</button>
+  </div>
+</div>
+
+<div class="wrap" id="panel" style="display:none">
+  <header>
+    <div class="logo"><span class="gold">S</span></div>
+    <div><h1>تحديث الأسعار</h1><p id="shopName"></p></div>
+    <span class="mode" id="mode"></span>
+  </header>
+
+  <div class="kpis">
+    <div><small>آخر تحديث</small><b class="num" id="kUpd">—</b></div>
+    <div><small>عدد العملات</small><b class="num" id="kCnt">—</b></div>
+    <div><small>المستخدمون</small><b class="num" id="kUsers">—</b></div>
+  </div>
+
+  <div class="card">
+    <h2>أسعار الصرف <small>عدّل ثم اضغط «نشر الأسعار» — تصل للعملاء فوراً</small></h2>
+    <table><thead><tr><th>العملة</th><th>شراء</th><th>مبيع</th><th class="spread">الفرق</th></tr></thead><tbody id="tb"></tbody></table>
+    <div class="row" style="margin-top:12px"><button class="btn" id="publish">نشر الأسعار</button><button class="btn ghost" id="reset">إلغاء التعديلات</button><button class="btn ghost" id="demoReset" style="display:none">العودة للوضع التجريبي المتحرك</button></div>
+  </div>
+
+  <div class="card">
+    <h2>شريط الإعلانات <small>يظهر أعلى الشاشة الرئيسية في التطبيق</small></h2>
+    <textarea id="ann" placeholder="مثال: عرض اليوم — عمولة صفر على الحوالات الخارجية حتى الساعة 6 مساءً"></textarea>
+    <div class="row" style="margin-top:10px"><button class="btn" id="annSave">نشر الإعلان</button><button class="btn ghost" id="annClear">إخفاء الإعلان</button></div>
+  </div>
+
+  <div class="card">
+    <h2>تأكيد إحالة <small>عند أول عملية للعميل الجديد في المحل</small></h2>
+    <div class="row"><input id="refCode" placeholder="كود العميل الجديد مثل SAFI-AB12C" style="flex:1;min-width:220px;height:52px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.3);padding:0 14px;font:600 16px Outfit;outline:none;direction:ltr"><button class="btn" id="refOk">تأكيد ومنح النقاط للمُحيل</button></div>
+    <p style="color:var(--mu);font-size:12px;margin-top:10px">يعمل هذا الخيار عند ربط التطبيق بالخادم (Google Apps Script).</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+const C=Object.assign({shopNameAr:'صافي للصرافة والحوالات',API_URL:'',ADMIN_PIN:'1234',currencies:[]},window.SAFI_CONFIG||{});
+const $=s=>document.querySelector(s);
+const S={get(k,d){try{const v=localStorage.getItem('safi_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('safi_'+k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem('safi_'+k)}catch(e){}}};
+const fmt=v=>Number(v).toLocaleString('en-US',{maximumFractionDigits:v<100?2:1});
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+async function api(action,params,post){if(!C.API_URL)return null;try{const r=post?await fetch(C.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,key:sessionStorage.getItem('safi_pin')},params||{}))}):await fetch(C.API_URL+'?'+new URLSearchParams(Object.assign({action},params||{})));return await r.json()}catch(e){return null}}
+let base={};
+function step(v){return v>=5000?5:v>=1000?1:v>=100?0.5:0.01}
+async function load(){
+  $('#shopName').textContent=C.shopNameAr; $('#mode').textContent=C.API_URL?'متصل بالخادم':'وضع العرض (محلي)';
+  if(!C.API_URL) $('#demoReset').style.display='';
+  let rates=null;
+  if(C.API_URL){const r=await api('rates');if(r&&r.rates){rates={};r.rates.forEach(x=>rates[x.code]={buy:x.buy,sell:x.sell});$('#ann').value=r.announce||'';$('#kUsers').textContent=r.users??'—';$('#kUpd').textContent=r.updated?new Date(r.updated).toLocaleTimeString('ar-SY',{hour:'2-digit',minute:'2-digit'}):'—'}}
+  if(!rates){const ov=S.get('override',null);rates={};C.currencies.forEach(c=>rates[c.code]=ov&&ov[c.code]?ov[c.code]:{buy:c.buy,sell:c.sell});$('#ann').value=S.get('announce','');$('#kUsers').textContent='—'}
+  base=JSON.parse(JSON.stringify(rates)); $('#kCnt').textContent=C.currencies.length; render();
+}
+function render(){
+  $('#tb').innerHTML=C.currencies.map(c=>{const r=base[c.code];return `<tr data-c="${c.code}"><td><div class="cur"><div class="sym" style="background:linear-gradient(145deg,${c.col},${c.col}88)">${c.sym}</div><div>${c.code}<small>${c.name}</small></div></div></td>
+  <td><div class="stepper"><button data-d="-1" data-f="buy">−</button><input class="num" data-f="buy" value="${r.buy}"><button data-d="1" data-f="buy">+</button></div></td>
+  <td><div class="stepper"><button data-d="-1" data-f="sell">−</button><input class="num" data-f="sell" value="${r.sell}"><button data-d="1" data-f="sell">+</button></div></td>
+  <td class="spread num" data-sp></td></tr>`}).join('');
+  document.querySelectorAll('#tb tr').forEach(tr=>{
+    const upd=()=>{const b=+tr.querySelector('input[data-f=buy]').value,s=+tr.querySelector('input[data-f=sell]').value,o=base[tr.dataset.c];tr.querySelector('[data-sp]').textContent=fmt(s-b);
+      tr.querySelector('input[data-f=buy]').classList.toggle('changed',b!=o.buy);tr.querySelector('input[data-f=sell]').classList.toggle('changed',s!=o.sell)};
+    tr.querySelectorAll('input').forEach(i=>i.oninput=upd);
+    tr.querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=tr.querySelector(`input[data-f=${b.dataset.f}]`),v=+i.value;i.value=+(v+step(v)*b.dataset.d).toFixed(2);upd()});
+    upd();
+  });
+}
+function collect(){const o={};document.querySelectorAll('#tb tr').forEach(tr=>{o[tr.dataset.c]={buy:+tr.querySelector('input[data-f=buy]').value,sell:+tr.querySelector('input[data-f=sell]').value}});return o}
+$('#publish').onclick=async()=>{
+  const o=collect();
+  for(const k in o){if(!(o[k].buy>0&&o[k].sell>0)){toast('قيمة غير صحيحة في '+k);return} if(o[k].sell<o[k].buy){if(!confirm('سعر المبيع أقل من الشراء في '+k+' — متابعة؟'))return}}
+  if(C.API_URL){const r=await api('setRates',{rates:Object.entries(o).map(([code,v])=>({code,...v}))},true);if(!r||!r.ok){toast('فشل النشر: '+(r&&r.error||'تحقق من الاتصال'));return}}
+  else S.set('override',o);
+  base=JSON.parse(JSON.stringify(o));render();$('#kUpd').textContent=new Date().toLocaleTimeString('ar-SY',{hour:'2-digit',minute:'2-digit'});toast('تم نشر الأسعار للعملاء ✓');
+};
+$('#reset').onclick=()=>render();
+$('#demoReset').onclick=()=>{S.del('override');toast('عاد التطبيق للأسعار التجريبية المتحركة');load()};
+$('#annSave').onclick=async()=>{const a=$('#ann').value.trim();if(C.API_URL){const r=await api('setAnnounce',{text:a},true);if(!r||!r.ok){toast('فشل النشر');return}}else S.set('announce',a);toast('تم نشر الإعلان ✓')};
+$('#annClear').onclick=async()=>{$('#ann').value='';if(C.API_URL)await api('setAnnounce',{text:''},true);else S.set('announce','');toast('تم إخفاء الإعلان')};
+$('#refOk').onclick=async()=>{const c=$('#refCode').value.trim().toUpperCase();if(!c)return;if(!C.API_URL){toast('يتطلب ربط الخادم');return}const r=await api('confirmReferral',{code:c},true);toast(r&&r.ok?'تم تأكيد الإحالة ومنح النقاط ✓':'لم يتم: '+(r&&r.error||'خطأ'))};
+async function login(){
+  const p=$('#pin').value; let ok=false;
+  if(C.API_URL){const r=await fetch(C.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'checkKey',key:p})}).then(r=>r.json()).catch(()=>null);ok=r&&r.ok}
+  else ok=p===String(C.ADMIN_PIN);
+  if(!ok){toast('رمز غير صحيح');return}
+  sessionStorage.setItem('safi_pin',p);$('#loginView').style.display='none';$('#panel').style.display='';load();
+}
+$('#loginBtn').onclick=login;$('#pin').onkeydown=e=>{if(e.key==='Enter')login()};
+if(sessionStorage.getItem('safi_pin')){$('#loginView').style.display='none';$('#panel').style.display='';load()}
+</script>
+</body>
+</html>
